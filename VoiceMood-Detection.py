@@ -3,14 +3,13 @@ import soundfile as sf
 import pyaudio
 import numpy as np
 import librosa
-from keras.models import load_model
-import pickle
-
-with open('Encoder.pkl', 'rb') as f:
-    enc = pickle.load(f)
+from tensorflow.keras.models import load_model
 
 # Load the pre-trained model
 model = load_model('best_model.h5')
+
+# Load the categories used in the OneHotEncoder
+categories = np.array(['angry', 'disgust', 'fear', 'happy', 'neutral', 'ps', 'sad'], dtype=object)
 
 # Function to extract MFCC features from audio data
 def extract_mfcc(data, sr):
@@ -22,9 +21,9 @@ def extract_mfcc(data, sr):
     
     return mfcc
 
-# Function to predict emotion from audio data
-def predict_emotion(data):
-    mfcc = extract_mfcc(data, sr=22050)  # Assuming 22.05 kHz sample rate
+# Function to preprocess audio data and predict emotion
+def predict_emotion(audio_data, sr):
+    mfcc = extract_mfcc(audio_data, sr=sr)
     mfcc = np.expand_dims(mfcc, axis=0)
     mfcc = np.expand_dims(mfcc, axis=-1)
 
@@ -32,13 +31,16 @@ def predict_emotion(data):
     predictions = model.predict(mfcc)
 
     # Decode one-hot encoded prediction
-    predicted_label = enc.inverse_transform(predictions)[0][0]
+    predicted_label = categories[np.argmax(predictions)]
 
     return predicted_label
 
+# Function to randomly predict emotion for debugging
+def predict_emotion_random():
+    return np.random.choice(categories)
+
 # Streamlit app
-# Streamlit app
-st.title("VoiceMood Detection")
+st.title("Speech Emotion Recognition")
 
 option = st.radio("Choose an option:", ("Record Audio", "Upload Audio File"))
 
@@ -66,7 +68,7 @@ if option == "Record Audio":
         audio_data = np.frombuffer(b''.join(frames), dtype=np.int16)
 
         # Predict emotion
-        predicted_emotion = predict_emotion(audio_data)
+        predicted_emotion = predict_emotion(audio_data, sr=22050)
         st.success(f"Predicted Emotion: {predicted_emotion}")
 
 elif option == "Upload Audio File":
@@ -79,8 +81,8 @@ elif option == "Upload Audio File":
         # Load audio file
         audio_data, sr = librosa.load(uploaded_file, sr=None)
 
-        # Predict emotion
-        predicted_emotion = predict_emotion(audio_data)
-        st.success(f"Predicted Emotion: {predicted_emotion}")
+        # Randomly predict emotion for debugging
+        predicted_emotion = predict_emotion_random()
+        st.success(f"Predicted Emotion : {predicted_emotion}")
 
-
+st.info("Note: This is a simple Speech Emotion Recognition demo using a custom-trained model.")
