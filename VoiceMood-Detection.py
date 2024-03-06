@@ -9,7 +9,7 @@ from tensorflow.keras.models import load_model
 model = load_model('best_model.h5')
 
 # Load the categories used in the OneHotEncoder
-categories = np.array(['angry', 'disgust', 'fear', 'happy', 'neutral', 'ps', 'sad'], dtype=object)
+categories = np.array(['fear', 'angry', 'fear', 'neutral', 'sad', 'ps', 'happy], dtype=object)
 
 # Function to extract MFCC features from audio data
 def extract_mfcc(data, sr):
