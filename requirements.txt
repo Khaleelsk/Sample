@@ -6,4 +6,3 @@ scikit-learn==1.2.2
 soundfile==0.12.1
 streamlit==1.29.0
 PyAudio
-portaudio19-dev python3-all-dev
