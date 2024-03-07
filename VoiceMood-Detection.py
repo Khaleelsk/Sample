@@ -73,8 +73,7 @@ if option == "Record Audio":
 
 elif option == "Upload Audio File":
     st.sidebar.title("Upload Options")
-    uploaded_file = st.sidebar.file_uploader("Choose an audio file", type=["wav", "mp3"])
-
+    uploaded_file = st.file_uploader("Upload an audio file", type=["mp3", "wav"])
     if uploaded_file:
         st.info("File uploaded successfully!")
 
