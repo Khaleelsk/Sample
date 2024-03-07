@@ -6,3 +6,4 @@ scikit-learn==1.2.2
 soundfile==0.12.1
 streamlit==1.29.0
 PyAudio
+sudo apt-get install portaudio19-dev python-pyaudio python3-pyaudio
