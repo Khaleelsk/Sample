@@ -5,6 +5,4 @@ tensorflow==2.15.0
 scikit-learn==1.2.2
 soundfile==0.12.1
 streamlit==1.29.0
-portaudio
-pipwin
-PyAudio
+PyAudio==0.2.10
